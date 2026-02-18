@@ -20,6 +20,8 @@ EasyScreen Studio is a lightweight, browser-based tool designed to help develope
   * Adjust vertical positioning of the device.  
 * **Privacy Focused**: All processing happens locally in your browser. No images are uploaded to a server.
 
+[Open EasyScreen on GitHub Pages](https://crippit.github.io/easyscreen/)
+
 ## **🛠️ Tech Stack**
 
 * **React 18**: UI and state management.  
