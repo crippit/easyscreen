@@ -97,13 +97,12 @@
 
         const LAPTOP_FRAME_SVG = `
         <svg width="1920" height="1120" viewBox="0 0 1920 1120" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <!-- Bezel -->
-        <rect x="160" y="50" width="1600" height="1000" rx="40" fill="#1a1a1a" />
+        <!-- Bezel with hole -->
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M160 90 a40 40 0 0 1 40 -40 h1520 a40 40 0 0 1 40 40 v920 a40 40 0 0 1 -40 40 h-1520 a40 40 0 0 1 -40 -40 z M190 80 h1540 v940 h-1540 z" fill="#1a1a1a"/>
+        <!-- Stroke -->
         <rect x="160" y="50" width="1600" height="1000" rx="40" stroke="#333" stroke-width="10"/>
         <!-- Notch -->
         <path d="M860 50h200v30a10 10 0 0 1-10 10h-180a10 10 0 0 1-10-10v-30z" fill="#000"/>
-        <!-- Screen Area (1920x1080 coord space roughly) - Actual hole -->
-        <!-- x=190, y=80, w=1540, h=940 roughly -->
         <!-- Base -->
         <path d="M0 1060h1920v40a20 20 0 0 1-20 20H20a20 20 0 0 1-20-20v-40z" fill="#d4d4d8"/>
         <path d="M0 1060h1920v10H0v-10z" fill="#a1a1aa"/>
