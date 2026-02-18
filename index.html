@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EasyScreen Studio</title>
+    <title>AppStore Studio v2.1</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- React & ReactDOM -->
@@ -41,7 +41,7 @@
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
-        // --- Icons (Lucide-style SVGs) ---
+        // --- Icons ---
         const Icon = ({ children, size = 24, className = "" }) => (
             <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>{children}</svg>
         );
@@ -53,44 +53,71 @@
         const ImageIcon = (p) => <Icon {...p}><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></Icon>;
         const Smartphone = (p) => <Icon {...p}><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><path d="M12 18h.01"/></Icon>;
         const Tablet = (p) => <Icon {...p}><rect width="16" height="20" x="4" y="2" rx="2" ry="2"/><line x1="12" x2="12.01" y1="18" y2="18"/></Icon>;
+        const Laptop = (p) => <Icon {...p}><path d="M20 16V7a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v9m16 0H4m16 0 1.28 2.55a1 1 0 0 1-.9 1.45H3.62a1 1 0 0 1-.9-1.45L4 16"/></Icon>;
         const Maximize = (p) => <Icon {...p}><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></Icon>;
         const Minimize = (p) => <Icon {...p}><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></Icon>;
         const Settings = (p) => <Icon {...p}><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.1a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></Icon>;
+        const Columns = (p) => <Icon {...p}><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><line x1="12" x2="12" y1="3" y2="21"/></Icon>;
+        const Rows = (p) => <Icon {...p}><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><line x1="3" x2="21" y1="12" y2="12"/></Icon>;
 
         // --- App Logic ---
         const SIZES = [
-            { id: '6.9', w: 1320, h: 2868, label: '6.9" (iPhone 16 Pro Max)', type: 'phone' },
-            { id: '6.7-new', w: 1290, h: 2796, label: '6.7" (iPhone 15 Pro Max)', type: 'phone' },
-            { id: '6.7', w: 1284, h: 2778, label: '6.7" (iPhone 13/14 Pro Max)', type: 'phone' },
-            { id: '6.5', w: 1242, h: 2688, label: '6.5" (iPhone 11 Pro Max)', type: 'phone' },
-            { id: '5.5', w: 1242, h: 2208, label: '5.5" (iPhone 8 Plus)', type: 'phone' },
-            { id: '12.9', w: 2048, h: 2732, label: '12.9" / 13" (iPad Pro)', type: 'tablet' },
+            // iOS
+            { id: '6.9', w: 1320, h: 2868, label: 'iPhone 16 Pro Max (6.9")', type: 'phone', category: 'iOS' },
+            { id: '6.7-new', w: 1290, h: 2796, label: 'iPhone 15 Pro Max (6.7")', type: 'phone', category: 'iOS' },
+            { id: '6.7', w: 1284, h: 2778, label: 'iPhone 13/14 Pro Max (6.7")', type: 'phone', category: 'iOS' },
+            { id: '6.5', w: 1242, h: 2688, label: 'iPhone 11 Pro Max (6.5")', type: 'phone', category: 'iOS' },
+            { id: '5.5', w: 1242, h: 2208, label: 'iPhone 8 Plus (5.5")', type: 'phone', category: 'iOS' },
+            { id: '12.9', w: 2048, h: 2732, label: 'iPad Pro (12.9")', type: 'tablet', category: 'iOS' },
+            // Mac
+            { id: 'mac-2880', w: 2880, h: 1800, label: 'Mac Pro (2880x1800)', type: 'laptop', category: 'Mac' },
+            { id: 'mac-2560', w: 2560, h: 1600, label: 'Mac (2560x1600)', type: 'laptop', category: 'Mac' },
+            { id: 'mac-1440', w: 1440, h: 900, label: 'Mac (1440x900)', type: 'laptop', category: 'Mac' },
+            { id: 'mac-1280', w: 1280, h: 800, label: 'Mac/Web (1280x800)', type: 'laptop', category: 'Mac' },
+            // Chrome Web Store
+            { id: 'chrome-marquee', w: 1400, h: 560, label: 'Chrome Marquee (1400x560)', type: 'laptop', category: 'Web' },
+            { id: 'chrome-small', w: 440, h: 280, label: 'Chrome Small (440x280)', type: 'laptop', category: 'Web' },
         ];
 
+        // Frame SVGs
         const PHONE_FRAME_SVG = `
         <svg width="1170" height="2532" viewBox="0 0 1170 2532" fill="none" xmlns="http://www.w3.org/2000/svg">
         <rect x="10" y="10" width="1150" height="2512" rx="160" stroke="#3d3d3d" stroke-width="20" fill="transparent"/>
         <rect x="0" y="0" width="1170" height="2532" rx="170" stroke="#1a1a1a" stroke-width="12"/>
         <path fill-rule="evenodd" clip-rule="evenodd" d="M160 30H1010C1081.8 30 1140 88.203 1140 160V2372C1140 2443.8 1081.8 2502 1010 2502H160C88.203 2502 30 2443.8 30 2372V160C30 88.203 88.203 30 160 30ZM160 0C71.6344 0 0 71.6344 0 160V2372C0 2460.4 71.6344 2532 160 2532H1010C1098.4 2532 1170 2460.4 1170 2372V160C1170 71.6344 1098.4 0 1010 0H160Z" fill="black"/>
         <rect x="420" y="60" width="330" height="100" rx="50" fill="black"/>
-        </svg>
-        `;
+        </svg>`;
 
         const TABLET_FRAME_SVG = `
         <svg width="2248" height="2932" viewBox="0 0 2248 2932" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path fill-rule="evenodd" clip-rule="evenodd" d="M0 140C0 62.68 62.68 0 140 0H2108C2185.32 0 2248 62.68 2248 140V2792C2248 2869.32 2185.32 2932 2108 2932H140C62.68 2932 0 2869.32 0 2792V140ZM100 100H2148V2832H100V100Z" fill="#1a1a1a"/>
         <rect x="4" y="4" width="2240" height="2924" rx="136" stroke="#3d3d3d" stroke-width="8"/>
         <circle cx="1124" cy="50" r="10" fill="#333"/>
-        </svg>
-        `;
+        </svg>`;
+
+        const LAPTOP_FRAME_SVG = `
+        <svg width="1920" height="1120" viewBox="0 0 1920 1120" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <!-- Bezel -->
+        <rect x="160" y="50" width="1600" height="1000" rx="40" fill="#1a1a1a" />
+        <rect x="160" y="50" width="1600" height="1000" rx="40" stroke="#333" stroke-width="10"/>
+        <!-- Notch -->
+        <path d="M860 50h200v30a10 10 0 0 1-10 10h-180a10 10 0 0 1-10-10v-30z" fill="#000"/>
+        <!-- Screen Area (1920x1080 coord space roughly) - Actual hole -->
+        <!-- x=190, y=80, w=1540, h=940 roughly -->
+        <!-- Base -->
+        <path d="M0 1060h1920v40a20 20 0 0 1-20 20H20a20 20 0 0 1-20-20v-40z" fill="#d4d4d8"/>
+        <path d="M0 1060h1920v10H0v-10z" fill="#a1a1aa"/>
+        <path d="M800 1060h320v5a5 5 0 0 1-5 5h-310a5 5 0 0 1-5-5v-5z" fill="#52525b"/>
+        </svg>`;
 
         const PhoneFrameSrc = `data:image/svg+xml;base64,${btoa(PHONE_FRAME_SVG)}`;
         const TabletFrameSrc = `data:image/svg+xml;base64,${btoa(TABLET_FRAME_SVG)}`;
+        const LaptopFrameSrc = `data:image/svg+xml;base64,${btoa(LAPTOP_FRAME_SVG)}`;
 
         function App() {
             const canvasRef = useRef(null);
             const [image, setImage] = useState(null);
-            const [caption, setCaption] = useState("Your Heading Here");
+            const [caption, setCaption] = useState("Your Headline Here");
             const [subCaption, setSubCaption] = useState("Optional subtitle goes here");
             
             const [currentSize, setCurrentSize] = useState(SIZES[2]); 
@@ -100,41 +127,31 @@
             const [fitMode, setFitMode] = useState("cover"); 
             const [padding, setPadding] = useState(100); 
             const [showFrame, setShowFrame] = useState(true);
+            const [layoutMode, setLayoutMode] = useState('stack'); // 'stack' or 'split'
             
             const [framesLoaded, setFramesLoaded] = useState(false);
             const phoneImgRef = useRef(null);
             const tabletImgRef = useRef(null);
+            const laptopImgRef = useRef(null);
 
             useEffect(() => {
                 let loadedCount = 0;
                 const checkLoaded = () => {
-                loadedCount++;
-                if (loadedCount === 2) {
-                    setFramesLoaded(true);
-                    draw();
-                }
+                    loadedCount++;
+                    if (loadedCount === 3) {
+                        setFramesLoaded(true);
+                        draw();
+                    }
                 };
 
-                const pImg = new Image();
-                pImg.src = PhoneFrameSrc;
-                pImg.onload = () => {
-                phoneImgRef.current = pImg;
-                checkLoaded();
-                };
-
-                const tImg = new Image();
-                tImg.src = TabletFrameSrc;
-                tImg.onload = () => {
-                tabletImgRef.current = tImg;
-                checkLoaded();
-                };
+                const pImg = new Image(); pImg.src = PhoneFrameSrc; pImg.onload = () => { phoneImgRef.current = pImg; checkLoaded(); };
+                const tImg = new Image(); tImg.src = TabletFrameSrc; tImg.onload = () => { tabletImgRef.current = tImg; checkLoaded(); };
+                const lImg = new Image(); lImg.src = LaptopFrameSrc; lImg.onload = () => { laptopImgRef.current = lImg; checkLoaded(); };
             }, []);
 
             useEffect(() => {
-                if (framesLoaded) {
-                draw();
-                }
-            }, [image, caption, subCaption, bgColor, bgType, textColor, fitMode, padding, showFrame, framesLoaded, currentSize]);
+                if (framesLoaded) draw();
+            }, [image, caption, subCaption, bgColor, bgType, textColor, fitMode, padding, showFrame, framesLoaded, currentSize, layoutMode]);
 
             const handleImageUpload = (e) => {
                 const file = e.target.files[0];
@@ -142,9 +159,7 @@
                 const reader = new FileReader();
                 reader.onload = (event) => {
                     const img = new Image();
-                    img.onload = () => {
-                    setImage(img);
-                    };
+                    img.onload = () => { setImage(img); };
                     img.src = event.target.result;
                 };
                 reader.readAsDataURL(file);
@@ -156,90 +171,179 @@
                 if (!canvas) return;
                 const ctx = canvas.getContext('2d');
 
-                const isTablet = currentSize.type === 'tablet';
-
+                // Canvas Dimensions
                 canvas.width = currentSize.w;
                 canvas.height = currentSize.h;
 
+                // Background
                 if (bgType === 'gradient') {
-                const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
-                gradient.addColorStop(0, bgColor);
-                gradient.addColorStop(1, adjustColorBrightness(bgColor, -40)); 
-                ctx.fillStyle = gradient;
+                    const gradient = ctx.createLinearGradient(0, 0, layoutMode === 'split' ? canvas.width : 0, canvas.height);
+                    gradient.addColorStop(0, bgColor);
+                    gradient.addColorStop(1, adjustColorBrightness(bgColor, -40)); 
+                    ctx.fillStyle = gradient;
                 } else {
-                ctx.fillStyle = bgColor;
+                    ctx.fillStyle = bgColor;
                 }
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-                ctx.fillStyle = textColor;
-                ctx.textAlign = 'center';
-                
-                ctx.font = 'bold 80px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
-                ctx.fillText(caption, canvas.width / 2, 200);
+                // --- Layout Logic ---
+                // We define two zones: TextZone and DeviceZone
+                let textX, textY, textMaxWidth, textAlign;
+                let deviceCenterX, deviceCenterY;
 
-                ctx.font = 'normal 50px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif';
-                ctx.fillText(subCaption, canvas.width / 2, 300);
+                if (layoutMode === 'split') {
+                    // Split: Text Left (40%), Device Right (60%)
+                    const textZoneW = canvas.width * 0.4;
+                    const deviceZoneW = canvas.width * 0.6;
+                    
+                    textX = textZoneW / 2;
+                    textY = canvas.height / 2; // Center text vertically
+                    textMaxWidth = textZoneW * 0.8;
+                    textAlign = 'center';
 
-                let frameImg, baseW, baseH, marginX, marginY, cornerRadiusBase;
-
-                if (isTablet) {
-                frameImg = tabletImgRef.current;
-                baseW = 2248; 
-                baseH = 2932;
-                marginX = 100;
-                marginY = 100;
-                cornerRadiusBase = 40; 
+                    deviceCenterX = textZoneW + (deviceZoneW / 2);
+                    deviceCenterY = canvas.height / 2 + padding;
                 } else {
-                frameImg = phoneImgRef.current;
-                baseW = 1170;
-                baseH = 2532;
-                marginX = 28;
-                marginY = 28;
-                cornerRadiusBase = 80;
+                    // Stack: Text Top, Device Bottom
+                    textX = canvas.width / 2;
+                    // Use relative text position (approx 10-15% down), ensuring minimum safe area
+                    textY = Math.max(100, canvas.height * 0.15); 
+                    textMaxWidth = canvas.width * 0.9;
+                    textAlign = 'center';
+
+                    deviceCenterX = canvas.width / 2;
+                    // Start device roughly 25% down the page plus padding (dynamic default instead of fixed 400px)
+                    // This handles variable height canvases (like Chrome Banner 560px vs iPhone 2700px)
+                    deviceCenterY = (canvas.height * 0.25) + padding; 
                 }
 
-                const targetDeviceWidth = canvas.width * 0.85; 
-                const scaleFactor = targetDeviceWidth / baseW;
+                // --- Draw Text ---
+                ctx.fillStyle = textColor;
+                ctx.textAlign = textAlign;
                 
+                // Dynamic Font Sizing based on canvas width to handle small promo tiles vs giant mac screens
+                const baseFontSize = Math.max(20, Math.min(80, canvas.width / 15));
+                
+                // Title
+                ctx.font = `bold ${baseFontSize}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif`;
+                wrapText(ctx, caption, textX, layoutMode === 'split' ? textY - (baseFontSize * 0.8) : textY, textMaxWidth, baseFontSize * 1.2);
+
+                // Subtitle
+                ctx.font = `normal ${baseFontSize * 0.6}px -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif`;
+                wrapText(ctx, subCaption, textX, layoutMode === 'split' ? textY + (baseFontSize * 0.8) : textY + baseFontSize + 20, textMaxWidth, baseFontSize * 0.8);
+
+                // --- Draw Device ---
+                const type = currentSize.type;
+                let frameImg, baseW, baseH, marginX, marginY, cornerRadiusBase;
+
+                if (type === 'laptop') {
+                    frameImg = laptopImgRef.current;
+                    baseW = 1920; baseH = 1120;
+                    marginX = 190; marginY = 80;
+                    cornerRadiusBase = 5; // Rectangular screen
+                } else if (type === 'tablet') {
+                    frameImg = tabletImgRef.current;
+                    baseW = 2248; baseH = 2932;
+                    marginX = 100; marginY = 100;
+                    cornerRadiusBase = 40; 
+                } else {
+                    frameImg = phoneImgRef.current;
+                    baseW = 1170; baseH = 2532;
+                    marginX = 28; marginY = 28;
+                    cornerRadiusBase = 80;
+                }
+
+                // Scale Logic
+                // If Stack: Width is 85% of canvas width.
+                // If Split: Width is 85% of DeviceZone width.
+                const zoneWidth = layoutMode === 'split' ? (canvas.width * 0.6) : canvas.width;
+                const targetDeviceWidth = zoneWidth * 0.85; 
+                let scaleFactor = targetDeviceWidth / baseW;
+                
+                // Extra constraint for small canvases (Chrome Small Tile 440x280)
+                // If height blows out, constrain by height
+                if (baseH * scaleFactor > canvas.height * 0.8) {
+                    scaleFactor = (canvas.height * 0.8) / baseH;
+                }
+
                 const drawW = baseW * scaleFactor;
                 const drawH = baseH * scaleFactor;
                 
-                const deviceX = (canvas.width - drawW) / 2;
-                const deviceY = 400 + padding; 
+                // Calculate Top-Left X/Y based on center points
+                const deviceX = deviceCenterX - (drawW / 2);
+                
+                // For 'Stack', deviceY is top-pinned + padding. For 'Split', deviceCenterY is center + padding.
+                const deviceY = layoutMode === 'split' ? deviceCenterY - (drawH / 2) : deviceCenterY;
 
                 if (image) {
-                const screenMarginXScaled = marginX * scaleFactor;
-                const screenMarginYScaled = marginY * scaleFactor;
-                
-                const screenW = drawW - (screenMarginXScaled * 2);
-                const screenH = drawH - (screenMarginYScaled * 2);
-                const screenX = deviceX + screenMarginXScaled;
-                const screenY = deviceY + screenMarginYScaled;
+                    const screenMarginXScaled = marginX * scaleFactor;
+                    const screenMarginYScaled = marginY * scaleFactor;
+                    
+                    const screenW = drawW - (screenMarginXScaled * 2);
+                    const screenH = drawH - (screenMarginYScaled * 2);
+                    const screenX = deviceX + screenMarginXScaled;
+                    const screenY = deviceY + screenMarginYScaled;
 
-                const scaledRadius = cornerRadiusBase * scaleFactor;
-                
-                ctx.save();
-                roundedRect(ctx, screenX, screenY, screenW, screenH, scaledRadius); 
-                ctx.clip();
+                    const scaledRadius = cornerRadiusBase * scaleFactor;
+                    
+                    ctx.save();
+                    roundedRect(ctx, screenX, screenY, screenW, screenH, scaledRadius); 
+                    ctx.clip();
 
-                if (fitMode === 'cover') {
-                    const scale = Math.max(screenW / image.width, screenH / image.height);
-                    const x = screenX + (screenW / 2) - (image.width * scale / 2);
-                    const y = screenY + (screenH / 2) - (image.height * scale / 2);
-                    ctx.drawImage(image, x, y, image.width * scale, image.height * scale);
-                } else {
-                    const scale = Math.min(screenW / image.width, screenH / image.height);
-                    const x = screenX + (screenW / 2) - (image.width * scale / 2);
-                    const y = screenY + (screenH / 2) - (image.height * scale / 2);
-                    ctx.drawImage(image, x, y, image.width * scale, image.height * scale);
-                }
-                ctx.restore();
+                    const imgRatio = image.width / image.height;
+                    const screenRatio = screenW / screenH;
+
+                    let renderW, renderH, renderX, renderY;
+
+                    if (fitMode === 'cover') {
+                        // Cover
+                        if (imgRatio > screenRatio) {
+                            renderH = screenH;
+                            renderW = screenH * imgRatio;
+                        } else {
+                            renderW = screenW;
+                            renderH = screenW / imgRatio;
+                        }
+                    } else {
+                        // Contain
+                        if (imgRatio > screenRatio) {
+                            renderW = screenW;
+                            renderH = screenW / imgRatio;
+                        } else {
+                            renderH = screenH;
+                            renderW = screenH * imgRatio;
+                        }
+                    }
+                    
+                    renderX = screenX + (screenW - renderW) / 2;
+                    renderY = screenY + (screenH - renderH) / 2;
+
+                    ctx.drawImage(image, renderX, renderY, renderW, renderH);
+                    ctx.restore();
                 }
 
                 if (showFrame && frameImg) {
-                ctx.drawImage(frameImg, deviceX, deviceY, drawW, drawH);
+                    ctx.drawImage(frameImg, deviceX, deviceY, drawW, drawH);
                 }
             };
+
+            const wrapText = (ctx, text, x, y, maxWidth, lineHeight) => {
+                const words = text.split(' ');
+                let line = '';
+                for(let n = 0; n < words.length; n++) {
+                    const testLine = line + words[n] + ' ';
+                    const metrics = ctx.measureText(testLine);
+                    const testWidth = metrics.width;
+                    if (testWidth > maxWidth && n > 0) {
+                        ctx.fillText(line, x, y);
+                        line = words[n] + ' ';
+                        y += lineHeight;
+                    } else {
+                        line = testLine;
+                    }
+                }
+                ctx.fillText(line, x, y);
+            }
 
             const roundedRect = (ctx, x, y, width, height, radius) => {
                 ctx.beginPath();
@@ -258,9 +362,8 @@
             const downloadImage = () => {
                 const canvas = canvasRef.current;
                 if (!canvas) return;
-                
                 const link = document.createElement('a');
-                link.download = `app-store-${currentSize.id}.png`;
+                link.download = `studio-${currentSize.id}.png`;
                 link.href = canvas.toDataURL('image/png', 1.0);
                 link.click();
             };
@@ -281,30 +384,64 @@
                 <div className="w-full md:w-96 bg-white border-r border-gray-200 flex flex-col h-full overflow-y-auto shadow-xl z-10">
                     <div className="p-6 border-b border-gray-100">
                     <h1 className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600">
-                        EasyScreen Studio
+                        AppStore Studio
                     </h1>
-                    <p className="text-sm text-gray-500 mt-1">Create professional screenshots</p>
+                    <p className="text-sm text-gray-500 mt-1">v2.1 • Mac & Chrome Support</p>
                     </div>
 
                     <div className="flex-1 p-6 space-y-8">
                     
-                    {/* 1. Upload Section */}
+                    {/* 1. Upload */}
                     <div className="space-y-3">
                         <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-2">
                         <Upload size={14} /> Source
                         </h3>
-                        <label className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors group">
-                        <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                            <div className="p-2 bg-white rounded-full shadow-sm mb-2 group-hover:scale-110 transition-transform">
-                            <ImageIcon className="w-6 h-6 text-indigo-500" />
+                        <label className="flex flex-col items-center justify-center w-full h-24 border-2 border-dashed border-gray-300 rounded-xl cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors group">
+                            <div className="flex items-center gap-2">
+                                <ImageIcon className="w-5 h-5 text-indigo-500" />
+                                <span className="text-sm text-gray-500 font-medium">Upload Screenshot</span>
                             </div>
-                            <p className="text-sm text-gray-500 font-medium">Click to upload screenshot</p>
-                        </div>
-                        <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
+                            <input type="file" className="hidden" accept="image/*" onChange={handleImageUpload} />
                         </label>
                     </div>
 
-                    {/* 2. Output Size Selector */}
+                    {/* 2. Layout (New) */}
+                    <div className="space-y-3">
+                        <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-2">
+                        <Settings size={14} /> Layout Mode
+                        </h3>
+                        <div className="flex gap-2">
+                            <button 
+                                onClick={() => setLayoutMode('stack')}
+                                className={`flex-1 py-2 px-3 flex items-center justify-center gap-2 text-xs font-medium rounded-lg border transition-all ${layoutMode === 'stack' ? 'bg-indigo-50 border-indigo-200 text-indigo-700' : 'bg-white border-gray-200 text-gray-600'}`}
+                            >
+                                <Rows size={14} /> Stack
+                            </button>
+                            <button 
+                                onClick={() => setLayoutMode('split')}
+                                className={`flex-1 py-2 px-3 flex items-center justify-center gap-2 text-xs font-medium rounded-lg border transition-all ${layoutMode === 'split' ? 'bg-indigo-50 border-indigo-200 text-indigo-700' : 'bg-white border-gray-200 text-gray-600'}`}
+                            >
+                                <Columns size={14} /> Split
+                            </button>
+                        </div>
+                        {/* New Vertical Position Slider */}
+                        <div className="pt-2">
+                             <label className="text-xs font-medium text-gray-600 mb-1 flex justify-between">
+                               <span>Vertical Position</span>
+                               <span className="text-gray-400">{padding}px</span>
+                             </label>
+                             <input 
+                               type="range" 
+                               min="-400" 
+                               max="800" 
+                               value={padding}
+                               onChange={(e) => setPadding(Number(e.target.value))}
+                               className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
+                             />
+                        </div>
+                    </div>
+
+                    {/* 3. Output Size */}
                     <div className="space-y-3">
                         <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-2">
                         <Settings size={14} /> Output Size
@@ -314,139 +451,57 @@
                         onChange={(e) => setCurrentSize(SIZES.find(s => s.id === e.target.value) || SIZES[2])}
                         className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500/20 bg-white"
                         >
-                        {SIZES.map(s => (
-                            <option key={s.id} value={s.id}>{s.label} ({s.w}x{s.h})</option>
-                        ))}
+                            <optgroup label="iOS (iPhone & iPad)">
+                                {SIZES.filter(s => s.category === 'iOS').map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
+                            </optgroup>
+                            <optgroup label="Mac App Store">
+                                {SIZES.filter(s => s.category === 'Mac').map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
+                            </optgroup>
+                            <optgroup label="Chrome Web Store">
+                                {SIZES.filter(s => s.category === 'Web').map(s => <option key={s.id} value={s.id}>{s.label}</option>)}
+                            </optgroup>
                         </select>
                         <div className="flex items-center gap-2 text-xs text-gray-400 px-1">
-                        {currentSize.type === 'phone' ? <Smartphone size={12}/> : <Tablet size={12}/>}
-                        <span>Mode: {currentSize.type === 'phone' ? 'iPhone' : 'iPad'}</span>
+                            {currentSize.type === 'phone' && <Smartphone size={12}/>}
+                            {currentSize.type === 'tablet' && <Tablet size={12}/>}
+                            {currentSize.type === 'laptop' && <Laptop size={12}/>}
+                            <span>Target: {currentSize.category}</span>
                         </div>
                     </div>
 
-                    {/* 3. Text Section */}
-                    <div className="space-y-4">
+                    {/* 4. Text */}
+                    <div className="space-y-3">
                         <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-2">
                         <Type size={14} /> Text
                         </h3>
-                        <div className="space-y-3">
-                        <div>
-                            <label className="text-xs font-medium text-gray-600 mb-1 block">Title</label>
-                            <input 
+                        <input 
                             type="text" 
                             value={caption}
                             onChange={(e) => setCaption(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm"
+                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm mb-2"
                             placeholder="Main Headline"
-                            />
-                        </div>
-                        <div>
-                            <label className="text-xs font-medium text-gray-600 mb-1 block">Subtitle</label>
-                            <input 
+                        />
+                        <input 
                             type="text" 
                             value={subCaption}
                             onChange={(e) => setSubCaption(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all text-sm"
+                            className="w-full px-3 py-2 border border-gray-200 rounded-lg text-sm"
                             placeholder="Secondary text"
-                            />
-                        </div>
-                        <div className="flex items-center gap-3">
-                            <div className="flex-1">
-                                <label className="text-xs font-medium text-gray-600 mb-1 block">Text Color</label>
-                                <div className="flex items-center gap-2 p-1 border border-gray-200 rounded-lg">
-                                <input 
-                                    type="color" 
-                                    value={textColor}
-                                    onChange={(e) => setTextColor(e.target.value)}
-                                    className="w-8 h-8 rounded border-none cursor-pointer bg-transparent"
-                                />
-                                <span className="text-xs text-gray-500 font-mono">{textColor}</span>
-                                </div>
+                        />
+                    </div>
+
+                    {/* 5. Style */}
+                    <div className="space-y-3">
+                        <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-2">
+                        <Palette size={14} /> Style
+                        </h3>
+                        <div className="flex items-center gap-2">
+                            <input type="color" value={bgColor} onChange={(e) => setBgColor(e.target.value)} className="w-8 h-8 rounded border-none cursor-pointer bg-transparent" />
+                            <div className="flex-1 flex gap-1">
+                                {['#6366f1', '#10b981', '#1f2937', '#ffffff'].map(c => (
+                                <button key={c} onClick={() => { setBgColor(c); setTextColor(c === '#ffffff' ? '#000000' : '#ffffff'); }} className="w-6 h-6 rounded-full border border-gray-200" style={{ backgroundColor: c }} />
+                                ))}
                             </div>
-                        </div>
-                        </div>
-                    </div>
-
-                    {/* 4. Style Section */}
-                    <div className="space-y-4">
-                        <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-2">
-                        <Palette size={14} /> Background
-                        </h3>
-                        <div className="space-y-3">
-                        <div className="flex gap-2">
-                            <button 
-                            onClick={() => setBgType('solid')}
-                            className={`flex-1 py-2 text-xs font-medium rounded-lg border transition-all ${bgType === 'solid' ? 'bg-indigo-50 border-indigo-200 text-indigo-700' : 'bg-white border-gray-200 text-gray-600'}`}
-                            >
-                            Solid
-                            </button>
-                            <button 
-                            onClick={() => setBgType('gradient')}
-                            className={`flex-1 py-2 text-xs font-medium rounded-lg border transition-all ${bgType === 'gradient' ? 'bg-indigo-50 border-indigo-200 text-indigo-700' : 'bg-white border-gray-200 text-gray-600'}`}
-                            >
-                            Gradient
-                            </button>
-                        </div>
-                        <div className="flex items-center gap-2 p-1 border border-gray-200 rounded-lg">
-                            <input 
-                            type="color" 
-                            value={bgColor}
-                            onChange={(e) => setBgColor(e.target.value)}
-                            className="w-8 h-8 rounded border-none cursor-pointer bg-transparent"
-                            />
-                            <span className="text-xs text-gray-500 font-mono">{bgColor}</span>
-                        </div>
-                        
-                        <div className="flex gap-2 flex-wrap">
-                            {['#6366f1', '#ec4899', '#10b981', '#f59e0b', '#1f2937', '#ffffff'].map(c => (
-                            <button 
-                                key={c}
-                                onClick={() => { setBgColor(c); setTextColor(c === '#ffffff' ? '#000000' : '#ffffff'); }}
-                                className="w-6 h-6 rounded-full border border-gray-200 shadow-sm hover:scale-110 transition-transform"
-                                style={{ backgroundColor: c }}
-                            />
-                            ))}
-                        </div>
-                        </div>
-                    </div>
-
-                    {/* 5. Device Layout */}
-                    <div className="space-y-4">
-                        <h3 className="text-xs font-semibold text-gray-400 uppercase tracking-wider flex items-center gap-2">
-                        <Smartphone size={14} /> Layout
-                        </h3>
-                        <div className="space-y-3">
-                        <div className="flex gap-2">
-                            <button 
-                                onClick={() => setFitMode('cover')}
-                                className={`flex-1 py-2 px-3 flex items-center justify-center gap-2 text-xs font-medium rounded-lg border transition-all ${fitMode === 'cover' ? 'bg-indigo-50 border-indigo-200 text-indigo-700' : 'bg-white border-gray-200 text-gray-600'}`}
-                                title="Fill the screen (may crop)"
-                            >
-                                <Maximize size={12} /> Fill Screen
-                            </button>
-                            <button 
-                                onClick={() => setFitMode('contain')}
-                                className={`flex-1 py-2 px-3 flex items-center justify-center gap-2 text-xs font-medium rounded-lg border transition-all ${fitMode === 'contain' ? 'bg-indigo-50 border-indigo-200 text-indigo-700' : 'bg-white border-gray-200 text-gray-600'}`}
-                                title="Fit entire image (may show bars)"
-                            >
-                                <Minimize size={12} /> Fit Image
-                            </button>
-                        </div>
-                        
-                        <div>
-                            <label className="text-xs font-medium text-gray-600 mb-1 flex justify-between">
-                            <span>Vertical Position</span>
-                            <span className="text-gray-400">{padding}px</span>
-                            </label>
-                            <input 
-                            type="range" 
-                            min="-200" 
-                            max="600" 
-                            value={padding}
-                            onChange={(e) => setPadding(Number(e.target.value))}
-                            className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-indigo-600"
-                            />
-                        </div>
                         </div>
                     </div>
 
@@ -462,23 +517,12 @@
                     </div>
                 </div>
 
-                {/* Main Preview Area */}
+                {/* Preview */}
                 <div className="flex-1 bg-gray-100 flex items-center justify-center p-8 overflow-hidden relative">
                     <div className="absolute inset-0 pattern-grid opacity-5 pointer-events-none"></div>
-                    
-                    <div className="relative shadow-2xl rounded-3xl overflow-hidden border-4 border-white bg-white">
-                        <canvas 
-                        ref={canvasRef}
-                        style={{ height: '80vh', maxWidth: '100%', objectFit: 'contain' }}
-                        className="block"
-                        />
+                    <div className="relative shadow-2xl rounded-xl overflow-hidden border-4 border-white bg-white">
+                        <canvas ref={canvasRef} style={{ height: '80vh', maxWidth: '100%', objectFit: 'contain' }} className="block" />
                     </div>
-
-                    {!image && (
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white/90 backdrop-blur shadow-lg px-6 py-4 rounded-full border border-gray-200 text-sm font-medium text-gray-600 pointer-events-none animate-bounce">
-                        Upload a screenshot to start
-                    </div>
-                    )}
                 </div>
                 </div>
             );
